@@ -3,9 +3,12 @@ import { LightningElement } from 'lwc';
 export default class QuizApp extends LightningElement {
 
     selected = {};
+    correctAnswers=0;
+    isSubmitted = false;
+
     questions = [
         {
-            id: "Question 1",
+            id: "Question1",
             question: "Which of the following is not directive?",
             options: {
                 a: "for:each",
@@ -15,7 +18,7 @@ export default class QuizApp extends LightningElement {
             answer: "c"
         },
         {
-            id: "Question 2",
+            id: "Question2",
             question: "Which of the following is not a template loop?",
             options: {
                 a: "for:each",
@@ -25,7 +28,7 @@ export default class QuizApp extends LightningElement {
             answer: "c"
         },
         {
-            id: "Question 1",
+            id: "Question3",
             question: "Which of the following is invalid in LWC folder??",
             options: {
                 a: "svg",
@@ -37,6 +40,8 @@ export default class QuizApp extends LightningElement {
     ]
 
     changeHandler = (event) => {
+        console.log("name: ", event.target.name);
+        console.log("value: ", event.target.value);
         const {name, value} = event.target;
         this.selected = {...this.selected, [name]: value};
     }
@@ -45,11 +50,21 @@ export default class QuizApp extends LightningElement {
         return !(Object.keys(this.selected).length === this.questions.length)
     }
 
-    submitHandler = () => {
-
+    get isScoredFull() {
+        return `slds-text-heading_large ${this.questions.length === this.correctAnswers ? 'slds-text-color_success' : 'slds-text-color_error'}`;
     }
 
-    resetHandler = () => {
+    submitHandler = (event) => {
+        event.preventDefault();
+        let correctArray = this.questions.filter(item => this.selected[item.id] === item.answer);
+        this.correctAnswers = correctArray.length;
+        this.isSubmitted = true;
+        console.log(this.correctAnswers);
+    }
 
+    resetHandler = (event) => {
+        this.correctAnswers=0;
+        this.selected=0;
+        this.isSubmitted = false;
     }
 }
